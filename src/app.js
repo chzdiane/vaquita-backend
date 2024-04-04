@@ -1,12 +1,11 @@
 import express from "express";
-import cors from "cors";
-import { groupRoutes } from "./group/groupRoutes.js";
+import { GroupRouter } from "./router/groupRoutes.js";
 
 const app = express();
-const PORT = 3001;
+const PORT = process.env.PORT || 3001;
 
 app.use(express.json());
-app.use(groupRoutes);
+app.use("/groups", GroupRouter());
 
 app.listen(PORT, () => {
     console.info(`Server running on http://localhost:${PORT}`)
