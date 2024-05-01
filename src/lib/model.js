@@ -2,7 +2,7 @@ const Model = () => {
   const entities = [];
 
   const findUnique = (id) => {
-    return entities.find((entity) => (entity.id = id));
+    return entities.find((entity) => (entity.id === id));
   };
 
   const findMany = () => {

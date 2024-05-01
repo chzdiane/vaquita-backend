@@ -2,68 +2,59 @@ import { GroupService } from "../services/groupServices.js";
 
 const GroupController = () => {
 
-    const groupServices = GroupService();
-
-    const getAll = (req, res) => {
-        const groups = groupServices.getAll();
+    const getAll = async (req, res) => {
+        const groupServices = GroupService(req.dbClient);
+        
+        const groups = await groupServices.getAll();
         res.status(200).json(groups);
     }
 
-    const getById = (req, res) => {
-        const id = parseInt(req.params.id);
-        if (isNaN(id)) {
-            res.status(400).json({ message: 'Invalid id, the Id must be an integer' });
-            return;
-        }
-        const group = groupServices.getById(id);
-        if (group) {
+    const getById = async (req, res) => {
+        const groupServices = GroupService(req.dbClient);
+
+        const group = await groupServices.getById(req.params.id);
+        if(group){
             res.status(200).json(group);
         } else {
-            res.status(404).json({ message: 'Group not found' });
+            res.status(404).end();
         }
     }
 
-    const getOweAllGroups = (req, res) => {
+    const getOweAllGroups = async (req, res) => {
+        const groupServices = GroupService(req.dbClient);
         const owe = groupServices.getOweAll();
         res.status(200).json({ owe });
     }
 
-    const create = (req, res) => {
-        const newGroup = req.body;
-        if(newGroup.name == "" && newGroup.name.length > 30){
-            res.status(400).json({message: 'Group name is empty or too long'});
-            return;
-        }
-        const groupAlreadyExists = groupServices.getAll().find(group => group.name === newGroup.name);
-        //console.log(groupAlreadyExists);
-        if(groupAlreadyExists){
-            res.status(400).json({message: 'Group already exists'});
-            return;
-        }
-        groupServices.create(newGroup);
-        res.status(201).json(newGroup);
-    }
-
-    const edit = (req, res) => {
-        const id = req.params.id;
+    const create = async (req, res) => {
+        const groupServices = GroupService(req.dbClient);
         const group = req.body;
-        const updatedGroup = groupServices.editById(id, group);
-        //console.log(updatedGroup);
-        //console.log(id, group);
+        const createdGroup = await groupServices.create(group);
+        res.status(201).json(createdGroup);
+    }
+
+    const fullUpdateById = async (req, res) => {
+        const groupServices = GroupService(req.dbClient);
+        const id = req.params.id;
+        const group = {
+            ...req.body,
+            id
+        };
+        const updatedGroup = await groupServices.fullUpdateById(group);
         if (updatedGroup) {
-            res.status(200).json(updatedGroup);
+            res.status(200).end();
         } else {
-            res.status(404).json({ message: 'Group not found' });
+            res.status(404).end();
         }
     }
 
-    const remove = (req, res) => {
-        const id = req.params.id;
-        const deleted = groupServices.removeById(id);
-        if (deleted) {
-            res.status(204).send();
+    const deleteById = async (req, res) => {
+        const groupServices = GroupService(req.dbClient);
+        const deleted = await groupServices.deleteById(req.params.id);
+        if(deleted){
+            res.status(204).end();
         } else {
-            res.status(404).json({ message: 'Group not found' });
+            res.status(404).end();
         }
     }
 
@@ -72,11 +63,9 @@ const GroupController = () => {
         getById,
         getOweAllGroups,
         create,
-        edit,
-        remove
+        fullUpdateById,
+        deleteById
     };
 };
 
-export {
-    GroupController
-};
+export default GroupController;

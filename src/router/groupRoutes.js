@@ -1,19 +1,19 @@
-import express from "express";
-import { GroupController } from "../controllers/groupController.js"
+import Router from "express-promise-router";
+import GroupController from "../controllers/groupController.js";
+import continuator from "../lib/continueDecorator.js";
 
 const GroupRouter = () => {
+  const router = Router();
+  const groupController = GroupController();
 
-    const groupController = GroupController();
-    const router = express.Router();
+  router.get("/", continuator(groupController.getAll));
+  router.get("/:id", continuator(groupController.getById));
+  //router.get('/owe', continuator(groupController.getOweA)llGroups);
+  router.post("/", continuator(groupController.create));
+  router.put("/:id", continuator(groupController.fullUpdateById));
+  router.delete("/:id", continuator(groupController.deleteById));
 
-    router.get('/', groupController.getAll);
-    router.get('/:id', groupController.getById);
-    //router.get('/owe', groupController.getOweAllGroups);
-    router.post('/', groupController.create);
-    router.put('/:id', groupController.edit);
-    router.delete('/:id', groupController.remove);
+  return router;
+};
 
-    return router;
-}
-
-export { GroupRouter };
+export default GroupRouter;
