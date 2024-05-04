@@ -29,6 +29,7 @@ const GroupController = () => {
     const create = async (req, res) => {
         const groupServices = GroupService(req.dbClient);
         const group = req.body;
+        group.ownerUserId = req.user.id;
         const createdGroup = await groupServices.create(group);
         res.status(201).json(createdGroup);
     }

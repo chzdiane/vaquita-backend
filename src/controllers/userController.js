@@ -1,10 +1,10 @@
-import { UserService } from "../services/userServices.js";
+import UserService from "../services/userServices.js";
 
 const UserController = () => {
 
     const getAll = async (req, res) => {
         const userServices = UserService(req.dbClient);
-        
+
         const users = await userServices.getAll();
         res.status(200).json(users);
     };

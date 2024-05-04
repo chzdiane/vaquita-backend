@@ -1,6 +1,6 @@
 import passport from "passport";
 import { ExtractJwt, Strategy } from "passport-jwt";
-import userRepository from "../repositories/userRepository.js";
+import UserService from "../services/userServices.js";
 
 const options = {
   jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
@@ -11,7 +11,8 @@ const options = {
 passport.use(
   new Strategy(options, async function (req, jwt_payload, done) {
     try {
-      const user = await userRepository().getById(jwt_payload.id);
+      const service = UserService(req.dbClient);
+      const user = await service.getById(jwt_payload.id);
       if (user) {
         req.user = user;
         return done(null, user);

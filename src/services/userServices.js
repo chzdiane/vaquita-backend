@@ -11,6 +11,10 @@ const UserService = (dbClient) => {
     return await repository.getById(userId);
   };
 
+  const getByEmail = async (email) => {
+    return await repository.getByEmail(email);
+  };
+
   const create = async (user) => {
     //const email = validatedEmail(user.email);
     const userCount = await repository.countByEmail(user.email);
@@ -41,7 +45,9 @@ const UserService = (dbClient) => {
     getById,
     create,
     fullUpdateById,
+    deleteById,
+    getByEmail,
   };
 };
 
-export { UserService };
+export default UserService;
