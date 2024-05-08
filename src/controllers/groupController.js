@@ -3,14 +3,14 @@ import { GroupService } from "../services/groupServices.js";
 const GroupController = () => {
 
     const getAll = async (req, res) => {
-        const groupServices = GroupService(req.dbClient);
+        const groupServices = GroupService(req.dbClient, req.user);
         
         const groups = await groupServices.getAll();
         res.status(200).json(groups);
     }
 
     const getById = async (req, res) => {
-        const groupServices = GroupService(req.dbClient);
+        const groupServices = GroupService(req.dbClient, req.user);
 
         const group = await groupServices.getById(req.params.id);
         if(group){
@@ -21,13 +21,13 @@ const GroupController = () => {
     }
 
     const getOweAllGroups = async (req, res) => {
-        const groupServices = GroupService(req.dbClient);
+        const groupServices = GroupService(req.dbClient, req.user);
         const owe = groupServices.getOweAll();
         res.status(200).json({ owe });
     }
 
     const create = async (req, res) => {
-        const groupServices = GroupService(req.dbClient);
+        const groupServices = GroupService(req.dbClient, req.user);
         const group = req.body;
         group.ownerUserId = req.user.id;
         const createdGroup = await groupServices.create(group);
@@ -35,11 +35,12 @@ const GroupController = () => {
     }
 
     const fullUpdateById = async (req, res) => {
-        const groupServices = GroupService(req.dbClient);
+        const groupServices = GroupService(req.dbClient, req.user);
         const id = req.params.id;
         const group = {
             ...req.body,
-            id
+            id,
+            ownerUserId: req.user.id
         };
         const updatedGroup = await groupServices.fullUpdateById(group);
         if (updatedGroup) {
@@ -50,7 +51,7 @@ const GroupController = () => {
     }
 
     const deleteById = async (req, res) => {
-        const groupServices = GroupService(req.dbClient);
+        const groupServices = GroupService(req.dbClient, req.user);
         const deleted = await groupServices.deleteById(req.params.id);
         if(deleted){
             res.status(204).end();

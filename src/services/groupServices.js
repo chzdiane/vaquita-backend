@@ -1,15 +1,22 @@
 import Repository from "../repositories/groupRepository.js";
 
-const GroupService = (dbClient) => {
+const GroupService = (dbClient, user) => {
+  if(!user){
+    throw new Error("User is required");
+  };
+
+  if(!dbClient){
+    throw new Error("dbClient is required");
+  };
+
   const repository = Repository(dbClient);
 
   const getAll = async () => {
-    //return groupModel.findMany().sort((a, b) => a.name.localeCompare(b.name));
-    return await repository.getAll();
+    return await repository.getAll(user.id);
   };
 
   const getById = async (groupId) => {
-    return await repository.getById(groupId);
+    return await repository.getById(groupId, user.id);
   };
 
   const getOweAll = async () => {
@@ -17,6 +24,12 @@ const GroupService = (dbClient) => {
   };
 
   const create = async (group) => {
+    //validamos el grupo
+    const validatedGroup = await validateCreate(group);
+    return await repository.create(validatedGroup);
+  };
+
+  const validateCreate = async (group) => {
     // validaciones de campos primero
     const name = validatedName(group.name);
     // validaciones con la base de datos
@@ -24,7 +37,7 @@ const GroupService = (dbClient) => {
     if (groupCount > 0) {
       throw AppError("Ya existe un grupo con ese nombre", 409);
     }
-    return await repository.create(group);
+    return { ...group, name };
   };
 
   const fullUpdateById = async (group) => {
@@ -32,7 +45,7 @@ const GroupService = (dbClient) => {
     const name = validatedName(group.name);
 
     // validaciones con la base de datos
-    const existingGroup = await repository.getById(group.id);
+    const existingGroup = await repository.getById(group.id, user.id);
     if (!existingGroup) {
       throw AppError("El grupo a modificar no existe", 404);
     }
@@ -46,11 +59,12 @@ const GroupService = (dbClient) => {
     return await repository.fullUpdateById({
       ...group,
       name,
+      ownerUserId: user.id,
     });
   };
 
   const deleteById = async (id) => {
-    return await repository.deleteById(id);
+    return await repository.deleteById(id, user.id);
   };
 
   const validatedName = (newName) => {
