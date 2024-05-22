@@ -16,7 +16,6 @@ const UserService = (dbClient) => {
   };
 
   const create = async (user) => {
-    //const email = validatedEmail(user.email);
     const userCount = await repository.countByEmail(user.email);
     if (userCount > 0) {
       throw AppError("Ya existe un usuario con ese email", 409);
@@ -25,7 +24,6 @@ const UserService = (dbClient) => {
   };
 
   const fullUpdateById = async (user) => {
-    //const email = validatedEmail(user.email);
     const existingUser = await repository.getById(user.id);
     if (!existingUser) {
       throw AppError("El usuario a modificar no existe", 404);
