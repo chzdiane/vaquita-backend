@@ -1,4 +1,4 @@
-const GET_ALL = `SELECT id, ownerUserId ,name, color, createdAt FROM groups WHERE ownerUserId = $1`;
+const GET_ALL = `SELECT id, ownerUserId ,name, color, createdAt FROM groups WHERE ownerUserId = $1 ORDER BY createdAt DESC`;
 const GET_BY_ID = `SELECT * FROM groups WHERE id = $1 AND ownerUserId = $2`;
 const CREATE = `INSERT INTO groups (ownerUserId, name, color, createdAt) VALUES ($1, $2, $3, NOW()) RETURNING *`;
 const DELETE = `DELETE FROM groups WHERE id = $1 AND ownerUserId = $2`;
