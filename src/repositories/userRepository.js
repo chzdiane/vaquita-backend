@@ -15,6 +15,7 @@ const Repository = (dbClient) => {
     };
 
     const getById = async (id) => {
+        // console.log(dbClient)
         const result = await dbClient.query(GET_BY_ID, [id]);
         return result.rows[0];
     };

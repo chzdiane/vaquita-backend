@@ -7,6 +7,7 @@ const AuthRouter = () => {
     const controller = authController();
 
     router.post("/login", continuator(controller.login));
+    router.post("/register", continuator(controller.register));
 
     return router;
 };

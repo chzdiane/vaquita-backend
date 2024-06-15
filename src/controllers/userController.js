@@ -1,5 +1,5 @@
 import UserService from "../services/userServices.js";
-import userSchemaValidation from "../validations/userValidation.js";
+import userSchemas from "../validations/userValidation.js";
 import AppError from "../lib/applicationError.js";
 
 const UserController = () => {
@@ -23,7 +23,7 @@ const UserController = () => {
 
   const create = async (req, res) => {
     const userServices = UserService(req.dbClient);
-    const { error, value } = userSchemaValidation.validate(req.body, {
+    const { error, value } = userSchemas.signUpSchema.validate(req.body, {
       abortEarly: false,
       stripUnknown: true,
     });
@@ -37,7 +37,7 @@ const UserController = () => {
 
   const fullUpdateById = async (req, res) => {
     const userServices = UserService(req.dbClient);
-    const { error, value } = userSchemaValidation.validate(req.body, {
+    const { error, value } = userSchemas.signUpSchema.validate(req.body, {
       abortEarly: false,
       stripUnknown: true,
     });

@@ -3,7 +3,9 @@ import groupSchemaValidation from "../validations/groupValidation.js";
 import AppError from "../lib/applicationError.js";
 
 const GroupController = () => {
+
   const getAll = async (req, res) => {
+    console.log(req.user);
     const groupServices = GroupService(req.dbClient, req.user);
 
     const groups = await groupServices.getAll();
@@ -39,7 +41,7 @@ const GroupController = () => {
     }
     const group = value;
     group.ownerUserId = req.user.id;
-    console.log(group);
+    // console.log(group);
     const createdGroup = await groupServices.create(group);
     res.status(201).json(createdGroup);
   };
