@@ -10,7 +10,8 @@ const AsyncRouter = () => {
 
     router.use(connectDatabase);
     router.use("/auth", authRouter());
-    router.use("/groups", groupRouter());
+    router.use("/groups", passport.authenticate('jwt', { session: false }), groupRouter());
+    //router.use("/groups", groupRouter());
     router.use("/users", userRouter());
     router.use(commitDatabase);
     router.use(rollbackDatabase);

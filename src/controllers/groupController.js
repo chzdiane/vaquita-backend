@@ -5,7 +5,7 @@ import AppError from "../lib/applicationError.js";
 const GroupController = () => {
 
   const getAll = async (req, res) => {
-    console.log(req.user);
+    //console.log(req.user);
     const groupServices = GroupService(req.dbClient, req.user);
 
     const groups = await groupServices.getAll();

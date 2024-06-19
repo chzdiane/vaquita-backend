@@ -11,9 +11,9 @@ const PORT = process.env.PORT || 3001;
 
 app.use(cors());
 app.use(express.json());
-app.use(mainRouter());
 app.use(passport.initialize());
 app.use(applyJWTAuthentication);
+app.use(mainRouter());
 
 // app.get(
 //   "/check",
