@@ -8,7 +8,7 @@ import { connectDatabase, commitDatabase, rollbackDatabase } from "../lib/databa
 const AsyncRouter = () => {
     const router = Router();
 
-    router.use(connectDatabase);
+    //router.use(connectDatabase);
     router.use("/auth", authRouter());
     router.use("/groups", passport.authenticate('jwt', { session: false }), groupRouter());
     //router.use("/groups", groupRouter());
