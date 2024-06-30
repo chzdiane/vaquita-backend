@@ -28,7 +28,7 @@ const UserController = () => {
       stripUnknown: true,
     });
     if (error) {
-      throw AppError(error.details[0].message, 400);
+      throw AppError(error.details.map((err) => err.message).join(","), 400);
     }
     const user = value;
     const createdUser = await userServices.create(user);
