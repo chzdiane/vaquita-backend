@@ -13,8 +13,7 @@ const authServices = (dbClient) => {
     }
 
     const payload = { id: user.id };
-    // { expiresIn: "1h"}
-    const token = jwt.sign(payload, process.env.JWT_SECRET);
+    const token = jwt.sign(payload, process.env.JWT_SECRET, {expiresIn: "3h"});
 
     return token;
   };

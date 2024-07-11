@@ -13,7 +13,7 @@ passport.use(
     try {
       const service = UserService(req.dbClient);
       const user = await service.getById(jwt_payload.id);
-      console.log(user, jwt_payload);
+      //console.log(user, jwt_payload);
       if (user) {
         req.user = user;
         return done(null, user);

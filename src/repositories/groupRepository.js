@@ -7,7 +7,6 @@ const COUNT_BY_NAME_NOT_ID = `SELECT COUNT(*) FROM groups WHERE name = $1 AND id
 const FULL_UPDATE_BY_ID = `UPDATE groups SET name = $1, color = $2, createdAt = NOW() WHERE id = $3 AND ownerUserId = $4`;
 
 const Repository = (dbClient) => {
-  //console.log(dbClient)
   const getAll = async (ownerUserId) => {
     const result = await dbClient.query(GET_ALL, [ownerUserId]);
     return result.rows;

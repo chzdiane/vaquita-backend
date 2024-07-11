@@ -1,4 +1,5 @@
 import Repository from "../repositories/groupRepository.js";
+import UserGroupRepository from "../repositories/userGroupRepository.js";
 import AppError from "../lib/applicationError.js";
 
 const GroupService = (dbClient, user) => {
@@ -11,6 +12,7 @@ const GroupService = (dbClient, user) => {
   }
 
   const repository = Repository(dbClient);
+  const userGroupRepository = UserGroupRepository(dbClient);
 
   const getAll = async () => {
     return await repository.getAll(user.id);
@@ -30,7 +32,14 @@ const GroupService = (dbClient, user) => {
     if (groupCount > 0) {
       throw AppError("Ya existe un grupo con ese nombre", 409);
     }
-    return await repository.create(group);
+    const createdGroup = await repository.create(group);
+    if (createdGroup) {
+      await userGroupRepository.createUserGroup(
+        group.ownerUserId,
+        createdGroup.id
+      );
+    }
+    return createdGroup;
   };
 
   const fullUpdateById = async (group) => {
